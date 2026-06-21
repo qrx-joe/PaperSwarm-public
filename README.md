@@ -8,9 +8,11 @@ role selection, independent expert reviews, conflict detection, revision
 planning, verification, archival, and optional EvoMap asset packaging.
 
 The project is designed as a clean public artifact. It contains the workflow
-definition, role prompts, schema/rubric resources, a static replay viewer, and
-one sanitized cached demo run. It does not include private credentials,
-registration material, travel notes, planning logs, or hackathon working notes.
+definition, role prompts, schema/rubric resources, a static replay viewer,
+sanitized cached demo outputs, three public case studies, a cold-vs-warm recall
+experiment, and evidence notes for the audit boundary. It does not include
+private credentials, registration material, travel notes, planning logs, or
+hackathon working notes.
 
 This repository is a public demo subset, not the full private working folder.
 The private workspace may contain extra draft papers, additional runs, local
@@ -40,12 +42,26 @@ Start here:
 - `integrations/evomap/workflow.md`
 - `integrations/evomap/examples/recall_medical_rct.sanitized.json`
 - `experiments/cold-vs-warm-recall/`
+- `docs/evidence/schema-gap-report.md`
 
 The main public integration cases are:
 
 - `case-studies/medical-rct-lx204/`
 - `case-studies/cs-ml-benchmark/`
 - `case-studies/education-quasi-experiment/`
+
+## Evidence Trail
+
+For reviewers who want to verify the claims before opening every run artifact,
+start with:
+
+- `docs/evidence/non-consensus-evidence.md`
+- `docs/evidence/schema-gap-report.md`
+- `experiments/cold-vs-warm-recall/comparison.md`
+
+These notes explain which claims are supported by cached artifacts, which
+claims are demonstrated in separate cases, and which audit fields remain future
+production work rather than completed demo evidence.
 
 ## Repository Layout
 
@@ -57,6 +73,7 @@ The main public integration cases are:
 |-- runs/demo/                  # Sanitized cached demo output
 |-- case-studies/               # Public end-to-end case studies
 |-- integrations/               # EvoMap integration notes and sanitized examples
+|-- docs/evidence/              # Public evidence notes and audit boundaries
 |-- replay/                     # Static replay viewer
 |-- scripts/demo-smoke.ps1      # Offline public smoke check
 |-- docs/DEMO.md                # Demo walkthrough
