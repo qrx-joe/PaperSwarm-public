@@ -65,3 +65,6 @@ review is automatically improved by one recalled memory. In current evidence,
 EvoMap is most valuable as a reusable memory and packaging layer; quality gains
 need more runs and harder cross-case tests.
 
+The cold vs warm recall experiment documents this boundary directly:
+
+`experiments/cold-vs-warm-recall/`

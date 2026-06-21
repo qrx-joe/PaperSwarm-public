@@ -1,0 +1,28 @@
+{
+  "source": "evomap_memory",
+  "sanitized": true,
+  "experiment": "cold-vs-warm-recall",
+  "query_signals": [
+    "paper-review",
+    "discipline-medical",
+    "method-rct",
+    "type-medical-rct",
+    "role-editor",
+    "role-method",
+    "role-domain",
+    "role-devil",
+    "role-ethicist",
+    "role-statistician"
+  ],
+  "matches": [
+    {
+      "gene_id": "paperswarm-run_20260618T031533Z_med",
+      "similarity": 1.0,
+      "score": 0.883,
+      "lesson": "Medical RCTs should include ethicist and statistician reviewers. Routine risks include LOCF with asymmetric dropout, CI/p-value inconsistency, multiplicity, and missing clinical registration or IRB evidence.",
+      "used_as": "Warm-start prior review memory"
+    }
+  ],
+  "redaction_note": "This public example removes platform-private response metadata, credentials, account state, and live runtime details."
+}
+

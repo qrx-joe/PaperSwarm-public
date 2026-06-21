@@ -14,6 +14,7 @@ $run = 'runs\demo'
 $case = 'case-studies\medical-rct-lx204'
 $caseCs = 'case-studies\cs-ml-benchmark'
 $caseEdu = 'case-studies\education-quasi-experiment'
+$experimentRecall = 'experiments\cold-vs-warm-recall'
 $files = @(
   'README.md',
   'trace.json',
@@ -62,7 +63,14 @@ $files = @(
   "$caseEdu\run\revise\verifier-round2.md",
   "$caseEdu\run\revise\paper_revised.md",
   "$caseEdu\run\revise\revise_report.md",
-  "$caseEdu\run\gep_bundle.json"
+  "$caseEdu\run\gep_bundle.json",
+  "$experimentRecall\README.md",
+  "$experimentRecall\comparison.md",
+  "$experimentRecall\cold\reviewer_set.json",
+  "$experimentRecall\cold\review_statistician.md",
+  "$experimentRecall\warm\reviewer_set.json",
+  "$experimentRecall\warm\review_statistician.md",
+  "$experimentRecall\examples\warm_recall.sanitized.json"
 )
 
 $fail = 0
@@ -92,6 +100,9 @@ if(Get-Command node -ErrorAction SilentlyContinue) {
     "$caseCs\run\gep_bundle.json",
     "$caseEdu\run\gep_bundle.json",
     'integrations\evomap\examples\recall_medical_rct.sanitized.json',
+    "$experimentRecall\cold\reviewer_set.json",
+    "$experimentRecall\warm\reviewer_set.json",
+    "$experimentRecall\examples\warm_recall.sanitized.json",
     'resources\schema\events.schema.json',
     'resources\schema\demo.events.json'
   )

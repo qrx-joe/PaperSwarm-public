@@ -39,6 +39,7 @@ Start here:
 - `integrations/evomap/README.md`
 - `integrations/evomap/workflow.md`
 - `integrations/evomap/examples/recall_medical_rct.sanitized.json`
+- `experiments/cold-vs-warm-recall/`
 
 The main public integration cases are:
 

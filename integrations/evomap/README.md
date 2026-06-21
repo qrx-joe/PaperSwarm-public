@@ -57,6 +57,8 @@ protection, and participant-protection risks.
   `integrations/evomap/examples/recall_medical_rct.sanitized.json`
 - Public GEP bundle:
   `case-studies/medical-rct-lx204/run/gep_bundle.json`
+- Cold vs warm recall experiment:
+  `experiments/cold-vs-warm-recall/`
 - Offline bundle validation:
   `uv run python steps/publish/scripts/gep_bundle.py validate case-studies/medical-rct-lx204/run/gep_bundle.json`
 
@@ -72,4 +74,3 @@ This repository intentionally does not include:
 
 The public materials show how PaperSwarm integrates with EvoMap without
 publishing credentials or platform-private runtime traces.
-
