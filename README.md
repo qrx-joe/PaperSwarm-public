@@ -28,6 +28,22 @@ the public demo, or unnecessary for offline validation.
 - Produces a P0/P1/P2 revision plan and a verification report.
 - Packages the run as a portable trace and optional EvoMap GEP bundle.
 
+## EvoMap Integration
+
+PaperSwarm uses EvoMap as the evolution layer for review experience. A review
+run can be archived as reusable memory, recalled by paper signals, and packaged
+as a GEP bundle containing `Gene`, `Capsule`, and `EvolutionEvent` assets.
+
+Start here:
+
+- `integrations/evomap/README.md`
+- `integrations/evomap/workflow.md`
+- `integrations/evomap/examples/recall_medical_rct.sanitized.json`
+
+The main public integration case is:
+
+- `case-studies/medical-rct-lx204/`
+
 ## Repository Layout
 
 ```text
@@ -36,6 +52,8 @@ the public demo, or unnecessary for offline validation.
 |-- resources/                  # Example paper, schemas, rubrics, reusable knowledge
 |-- steps/                      # Step-level instructions and helper scripts
 |-- runs/demo/                  # Sanitized cached demo output
+|-- case-studies/               # Public end-to-end case studies
+|-- integrations/               # EvoMap integration notes and sanitized examples
 |-- replay/                     # Static replay viewer
 |-- scripts/demo-smoke.ps1      # Offline public smoke check
 |-- docs/DEMO.md                # Demo walkthrough
@@ -91,6 +109,13 @@ Start reading from:
 The public demo includes a placeholder `runs/demo/revise/paper_revised.md`
 rather than a full revised manuscript. That keeps the package focused on the
 workflow trace and avoids redistributing unnecessary manuscript text.
+
+## Medical RCT Case Study
+
+The full public medical chain is under `case-studies/medical-rct-lx204/`. It
+includes the synthetic medical manuscript, six role reviews, conflict
+adjudication, a revision plan, an archive summary, a P1 audit sample, and the
+GEP bundle used to show the EvoMap integration path.
 
 ## Credentials
 

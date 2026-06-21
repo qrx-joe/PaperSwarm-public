@@ -1,0 +1,136 @@
+{
+  "schema_version": "0.1",
+  "run_id": "run_20260618T031533Z_med_tiny_gold",
+  "generated_at": "REPLACE_WITH_ISO_TIMESTAMP",
+  "provenance": {
+    "executor": "Claude Code + human operator",
+    "human_in_loop": true,
+    "events_origin": "manual_demo",
+    "note": "Tiny gold-run template for one audited conflict. Use only after the human operator confirms the decision text. Do not leave REPLACE_* placeholders in a submitted gold artifact."
+  },
+  "paper_meta": {
+    "paper_type": "medical-rct",
+    "discipline": "clinical medicine",
+    "method": "randomized controlled trial",
+    "roles": ["devil", "statistician"]
+  },
+  "events": [
+    {
+      "event_id": "fnd_devil_01",
+      "event_type": "reviewer_judgment",
+      "step": "review_devil",
+      "time": "2026-06-18T03:15:40Z",
+      "produced_by": "produced_by_agent",
+      "agent_kind": "devil",
+      "source": {
+        "from": "review_devil/review_devil.md",
+        "confidence": "direct"
+      },
+      "lineage": {},
+      "payload": {
+        "finding_id": "fnd_devil_01",
+        "claim": "Primary endpoint CI [0.6, 1.6] and p=0.02 are mathematically inconsistent; recomputation from the reported SD/n implies p<0.001.",
+        "evidence": "The reported CI excludes 0, but with n=240 and the stated SD the implied z statistic is about 9.2, inconsistent with p=0.02.",
+        "dimension": 3,
+        "severity": "critical",
+        "confidence_level": "high",
+        "evidence_strength": "strong",
+        "reasoning": "Independent devil advocate statistical challenge."
+      }
+    },
+    {
+      "event_id": "fnd_statistician_01",
+      "event_type": "reviewer_judgment",
+      "step": "review_statistician",
+      "time": "2026-06-18T03:15:42Z",
+      "produced_by": "produced_by_agent",
+      "agent_kind": "statistician",
+      "source": {
+        "from": "review_statistician/review_statistician.md",
+        "confidence": "direct"
+      },
+      "lineage": {},
+      "payload": {
+        "finding_id": "fnd_statistician_01",
+        "claim": "The primary endpoint evidence chain is blocked by a CI/p-value inconsistency, independently confirming the devil advocate finding.",
+        "evidence": "Independent statistical review reached the same conclusion: the reported CI implies p<0.001, not p=0.02.",
+        "dimension": 3,
+        "severity": "critical",
+        "confidence_level": "high",
+        "evidence_strength": "strong",
+        "reasoning": "Independent statistician verification."
+      }
+    },
+    {
+      "event_id": "cfl_01",
+      "event_type": "conflict",
+      "step": "conflict",
+      "time": "2026-06-18T03:16:10Z",
+      "produced_by": "produced_by_agent",
+      "source": {
+        "from": "conflict/conflict_report.md",
+        "confidence": "inferred",
+        "inferred_method": "Mapped C2 consensus to factual_disagreement because the issue is a numeric incompatibility.",
+        "inferred_from": "conflict_report.md C2."
+      },
+      "lineage": {
+        "derived_from": ["fnd_devil_01", "fnd_statistician_01"]
+      },
+      "payload": {
+        "conflict_id": "cfl_01",
+        "type": "consensus",
+        "tension_type": "factual_disagreement",
+        "finding_refs": ["fnd_devil_01", "fnd_statistician_01"],
+        "severity": "critical",
+        "confidence_level": "high"
+      }
+    },
+    {
+      "event_id": "dec_01",
+      "event_type": "decision",
+      "step": "conflict",
+      "time": "REPLACE_WITH_HUMAN_DECISION_TIME",
+      "produced_by": "human_decision",
+      "decision_maker": "human",
+      "source": {
+        "from": "human confirmation in current Codex thread or signed submission note",
+        "confidence": "direct"
+      },
+      "lineage": {
+        "resolves": ["cfl_01"]
+      },
+      "payload": {
+        "decision_id": "dec_01",
+        "verdict": "adopt",
+        "rationale": "REPLACE_WITH_HUMAN_RATIONALE",
+        "selected_position": "adopt devil + statistician consensus"
+      }
+    },
+    {
+      "event_id": "rev_01",
+      "event_type": "revision",
+      "step": "revise",
+      "time": "REPLACE_WITH_REVISION_TIME",
+      "produced_by": "human_annotation",
+      "agent_kind": "verifier",
+      "source": {
+        "from": "revision_plan.md P0-1 + human-scoped action",
+        "confidence": "direct"
+      },
+      "lineage": {
+        "enacts": ["dec_01"]
+      },
+      "payload": {
+        "revision_id": "rev_01",
+        "before": "Paper reports primary endpoint CI [0.6, 1.6] and p=0.02.",
+        "after": "REPLACE_WITH_SCOPED_REVISION_ACTION, e.g. Recalculate the primary endpoint CI/p pair and rerun missing-data analysis with MMRM, multiple imputation, and tipping-point sensitivity analysis before retaining any positive efficacy claim.",
+        "target_section": {
+          "section": "Methods / Results primary endpoint"
+        },
+        "verifier_state": "partial",
+        "round": 1
+      }
+    }
+  ],
+  "gaps": []
+}

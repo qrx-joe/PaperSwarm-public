@@ -36,6 +36,20 @@ PaperSwarm 的设计目标是把这件事结构化：
 - 解决评审结果难复查的问题：提供 `trace.json`、schema、demo outputs 和静态 replay viewer，使每个节点的输入输出都能被追踪。
 - 解决“跑通一次但不可验证”的问题：提供离线 smoke check，验证公开文件、JSON、review roles 和 GEP bundle，不依赖外部服务。
 
+## EvoMap 结合方式
+
+PaperSwarm 把 EvoMap 作为评审经验的进化层，而不是只把它当成普通调用工具。一次评审 run 可以被归档为可复用记忆，通过论文信号召回，并封装为包含 `Gene`、`Capsule`、`EvolutionEvent` 的 GEP bundle。
+
+建议从这里看：
+
+- `integrations/evomap/README.md`
+- `integrations/evomap/workflow.md`
+- `integrations/evomap/examples/recall_medical_rct.sanitized.json`
+
+主公开案例是：
+
+- `case-studies/medical-rct-lx204/`
+
 ## 仓库结构
 
 ```text
@@ -44,6 +58,8 @@ PaperSwarm 的设计目标是把这件事结构化：
 |-- resources/                  # 示例论文、schema、rubric、可复用知识
 |-- steps/                      # 各步骤说明和 helper scripts
 |-- runs/demo/                  # 脱敏缓存示例输出
+|-- case-studies/               # 端到端公开案例
+|-- integrations/               # EvoMap 结合说明与脱敏示例
 |-- replay/                     # 静态回放页面
 |-- scripts/demo-smoke.ps1      # 离线公开 demo 检查
 |-- docs/DEMO.md                # Demo walkthrough
@@ -89,6 +105,10 @@ $OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
 - `runs/demo/publish/gep_bundle.json`
 
 公开 demo 中的 `runs/demo/revise/paper_revised.md` 是占位说明，不包含完整修订手稿。这样可以让仓库聚焦在可审计的评审流程上，同时避免分发不必要的完整论文文本。
+
+## 医学 RCT 完整案例
+
+更完整的医学链路位于 `case-studies/medical-rct-lx204/`。其中包含合成医学草稿、六个角色评审、冲突裁决、修订计划、归档摘要、P1 audit 样例，以及用于展示 EvoMap 结合路径的 GEP bundle。
 
 ## 演进节点
 

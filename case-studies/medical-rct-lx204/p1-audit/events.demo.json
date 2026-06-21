@@ -1,0 +1,131 @@
+{
+  "schema_version": "0.1",
+  "run_id": "run_20260618T031533Z_med",
+  "generated_at": "2026-06-20T00:00:00Z",
+  "provenance": {
+    "executor": "Claude Code (executor drafted decision)",
+    "human_in_loop": false,
+    "events_origin": "manual_demo",
+    "note": "Manual audit sample extracted from the med run. It proves the event model can represent the review chain, but the decision remains ai_simulated and revision is intentionally absent."
+  },
+  "paper_meta": {
+    "paper_type": "medical-rct",
+    "discipline": "clinical medicine",
+    "method": "randomized controlled trial",
+    "roles": ["editor", "method", "domain", "devil", "statistician", "ethicist"]
+  },
+  "events": [
+    {
+      "event_id": "fnd_devil_01",
+      "event_type": "reviewer_judgment",
+      "step": "review_devil",
+      "time": "2026-06-18T03:15:40Z",
+      "produced_by": "produced_by_agent",
+      "agent_kind": "devil",
+      "source": {
+        "from": "review_devil/review_devil.md",
+        "confidence": "direct"
+      },
+      "lineage": {},
+      "payload": {
+        "finding_id": "fnd_devil_01",
+        "claim": "Primary endpoint CI [0.6, 1.6] and p=0.02 are mathematically inconsistent; recomputation from the reported SD/n implies p<0.001.",
+        "evidence": "The reported CI excludes 0, but with n=240 and the stated SD the implied z statistic is about 9.2, inconsistent with p=0.02.",
+        "target_section": {
+          "section": "Results / primary endpoint",
+          "line_range": "reported HbA1c result paragraph"
+        },
+        "dimension": 3,
+        "severity": "critical",
+        "confidence_level": "high",
+        "evidence_strength": "strong",
+        "reasoning": "Devil advocate independently recomputed the statistical implication and flagged the evidence chain as unreliable."
+      }
+    },
+    {
+      "event_id": "fnd_statistician_01",
+      "event_type": "reviewer_judgment",
+      "step": "review_statistician",
+      "time": "2026-06-18T03:15:42Z",
+      "produced_by": "produced_by_agent",
+      "agent_kind": "statistician",
+      "source": {
+        "from": "review_statistician/review_statistician.md",
+        "confidence": "direct"
+      },
+      "lineage": {},
+      "payload": {
+        "finding_id": "fnd_statistician_01",
+        "claim": "The primary endpoint evidence chain is blocked by a CI/p-value inconsistency, independently confirming the devil advocate finding.",
+        "evidence": "Independent statistical review reached the same conclusion: the reported CI implies p<0.001, not p=0.02.",
+        "target_section": {
+          "section": "Results / primary endpoint"
+        },
+        "dimension": 3,
+        "severity": "critical",
+        "confidence_level": "high",
+        "evidence_strength": "strong",
+        "reasoning": "Statistician reasoning converged with the devil advocate without reading that review first, making this a cross-role validation rather than a single-agent opinion."
+      }
+    },
+    {
+      "event_id": "cfl_01",
+      "event_type": "conflict",
+      "step": "conflict",
+      "time": "2026-06-18T03:16:10Z",
+      "produced_by": "produced_by_agent",
+      "source": {
+        "from": "conflict/conflict_report.md",
+        "confidence": "inferred",
+        "inferred_method": "The conflict report labels C2 as a high-strength consensus issue independently derived by devil and statistician; tension_type is inferred from the numeric factual inconsistency.",
+        "inferred_from": "conflict_report.md C2 and the swarm value section describing the CI/p cross-check."
+      },
+      "lineage": {
+        "derived_from": ["fnd_devil_01", "fnd_statistician_01"]
+      },
+      "payload": {
+        "conflict_id": "cfl_01",
+        "type": "consensus",
+        "tension_type": "factual_disagreement",
+        "finding_refs": ["fnd_devil_01", "fnd_statistician_01"],
+        "severity": "critical",
+        "confidence_level": "high"
+      }
+    },
+    {
+      "event_id": "dec_01",
+      "event_type": "decision",
+      "step": "conflict",
+      "time": "2026-06-18T03:16:30Z",
+      "produced_by": "produced_by_agent",
+      "decision_maker": "ai_simulated",
+      "source": {
+        "from": "conflict/author_resolution.md",
+        "confidence": "direct"
+      },
+      "lineage": {
+        "resolves": ["cfl_01"]
+      },
+      "payload": {
+        "decision_id": "dec_01",
+        "verdict": "adopt",
+        "rationale": "Executor-drafted decision adopts the consensus P0 action: recalculate CI/p consistency and redo the missing-data analysis. This is explicitly not a human decision.",
+        "selected_position": "devil + statistician consensus"
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "event_id": "dec_01",
+      "field": "decision_maker",
+      "reason": "author_resolution.md explicitly says the decision was drafted by the executor and awaits real author confirmation.",
+      "fix_step": "Copy events.human-template.json to events.human.json and replace the decision rationale only after the real user confirms the verdict."
+    },
+    {
+      "event_id": "dec_01",
+      "field": "revision",
+      "reason": "revise_report.md says the Worker/Verifier rewrite loop was skipped for this architecture validation run.",
+      "fix_step": "Run a real Worker/Verifier revision or record a scoped revision action with verifier_state."
+    }
+  ]
+}

@@ -11,6 +11,7 @@ $repo = (Resolve-Path "$PSScriptRoot\..").Path
 Set-Location $repo
 
 $run = 'runs\demo'
+$case = 'case-studies\medical-rct-lx204'
 $files = @(
   'README.md',
   'trace.json',
@@ -31,7 +32,19 @@ $files = @(
   "$run\archive\review_archive.md",
   "$run\publish\gep_bundle_preview.md",
   "$run\publish\publish_payload.json",
-  "$run\publish\gep_bundle.json"
+  "$run\publish\gep_bundle.json",
+  'integrations\evomap\README.md',
+  'integrations\evomap\workflow.md',
+  'integrations\evomap\examples\recall_medical_rct.sanitized.json',
+  "$case\README.md",
+  "$case\input\paper_draft.medical.md",
+  "$case\run\structure\reviewer_set.json",
+  "$case\run\conflict\conflict_report.md",
+  "$case\run\advice\revision_plan.md",
+  "$case\run\revise\revise_report.md",
+  "$case\run\archive_review_archive.md",
+  "$case\run\gep_bundle.json",
+  "$case\p1-audit\events.demo.json"
 )
 
 $fail = 0
@@ -54,6 +67,10 @@ if(Get-Command node -ErrorAction SilentlyContinue) {
     "$run\structure\reviewer_set.json",
     "$run\publish\gep_bundle.json",
     "$run\publish\publish_payload.json",
+    "$case\run\structure\reviewer_set.json",
+    "$case\run\gep_bundle.json",
+    "$case\p1-audit\events.demo.json",
+    'integrations\evomap\examples\recall_medical_rct.sanitized.json',
     'resources\schema\events.schema.json',
     'resources\schema\demo.events.json'
   )
@@ -75,6 +92,10 @@ if(Get-Command node -ErrorAction SilentlyContinue) {
 if(Get-Command uv -ErrorAction SilentlyContinue) {
   $out = (& uv run python steps\publish\scripts\gep_bundle.py validate "$run\publish\gep_bundle.json" 2>&1 | Out-String).Trim()
   Check ($LASTEXITCODE -eq 0) 'gep-bundle' 'GEP bundle validates'
+  if($LASTEXITCODE -ne 0 -and $out) { Write-Host $out -ForegroundColor DarkRed }
+
+  $out = (& uv run python steps\publish\scripts\gep_bundle.py validate "$case\run\gep_bundle.json" 2>&1 | Out-String).Trim()
+  Check ($LASTEXITCODE -eq 0) 'case-gep-bundle' 'medical RCT case GEP bundle validates'
   if($LASTEXITCODE -ne 0 -and $out) { Write-Host $out -ForegroundColor DarkRed }
 } else {
   Check $false 'uv' 'uv not on PATH; cannot validate Python helper'

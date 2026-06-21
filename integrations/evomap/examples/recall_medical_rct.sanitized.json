@@ -1,0 +1,51 @@
+{
+  "source": "evomap_memory",
+  "sanitized": true,
+  "query_signals": [
+    "paper-review",
+    "discipline-medical",
+    "method-rct",
+    "type-medical-rct",
+    "role-editor",
+    "role-method",
+    "role-domain",
+    "role-devil",
+    "role-ethicist",
+    "role-statistician"
+  ],
+  "matches": [
+    {
+      "gene_id": "paperswarm-run_20260618T031533Z_med",
+      "similarity": 1.0,
+      "score": 0.883,
+      "signals": [
+        "paper-review",
+        "discipline-medical",
+        "method-rct",
+        "type-medical-rct",
+        "role-editor",
+        "role-method",
+        "role-domain",
+        "role-devil",
+        "role-statistician",
+        "role-ethicist"
+      ],
+      "lesson": "Medical RCTs should include statistician and ethicist roles. The statistician covers numeric consistency and missing-data assumptions; the ethicist covers registration, IRB, COI, data protection, and participant protection.",
+      "high_frequency_issues": [
+        "LOCF plus asymmetric dropout without sensitivity analysis",
+        "primary endpoint confidence interval and p-value inconsistency",
+        "multiple secondary endpoints without multiplicity correction"
+      ],
+      "agent_reliability": {
+        "editor": 4.0,
+        "method": 4.5,
+        "domain": 4.5,
+        "devil": 4.0,
+        "statistician": 5.0,
+        "ethicist": 4.5
+      }
+    }
+  ],
+  "redaction_note": "Credentials, platform account state, live failure payloads, and node-local identifiers are excluded from this public example."
+}
+
