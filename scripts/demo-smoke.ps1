@@ -12,6 +12,8 @@ Set-Location $repo
 
 $run = 'runs\demo'
 $case = 'case-studies\medical-rct-lx204'
+$caseCs = 'case-studies\cs-ml-benchmark'
+$caseEdu = 'case-studies\education-quasi-experiment'
 $files = @(
   'README.md',
   'trace.json',
@@ -44,7 +46,23 @@ $files = @(
   "$case\run\revise\revise_report.md",
   "$case\run\archive_review_archive.md",
   "$case\run\gep_bundle.json",
-  "$case\p1-audit\events.demo.json"
+  "$case\p1-audit\events.demo.json",
+  'case-studies\README.md',
+  "$caseCs\README.md",
+  "$caseCs\run\structure\reviewer_set.json",
+  "$caseCs\run\review_reproducibility\review_reproducibility.md",
+  "$caseCs\run\conflict\conflict_report.md",
+  "$caseCs\run\gep_bundle.json",
+  "$caseEdu\README.md",
+  "$caseEdu\run\structure\paper_structure.md",
+  "$caseEdu\run\conflict\conflict_report.md",
+  "$caseEdu\run\revise\worker-round1.md",
+  "$caseEdu\run\revise\verifier-round1.md",
+  "$caseEdu\run\revise\worker-round2.md",
+  "$caseEdu\run\revise\verifier-round2.md",
+  "$caseEdu\run\revise\paper_revised.md",
+  "$caseEdu\run\revise\revise_report.md",
+  "$caseEdu\run\gep_bundle.json"
 )
 
 $fail = 0
@@ -70,6 +88,9 @@ if(Get-Command node -ErrorAction SilentlyContinue) {
     "$case\run\structure\reviewer_set.json",
     "$case\run\gep_bundle.json",
     "$case\p1-audit\events.demo.json",
+    "$caseCs\run\structure\reviewer_set.json",
+    "$caseCs\run\gep_bundle.json",
+    "$caseEdu\run\gep_bundle.json",
     'integrations\evomap\examples\recall_medical_rct.sanitized.json',
     'resources\schema\events.schema.json',
     'resources\schema\demo.events.json'
@@ -96,6 +117,14 @@ if(Get-Command uv -ErrorAction SilentlyContinue) {
 
   $out = (& uv run python steps\publish\scripts\gep_bundle.py validate "$case\run\gep_bundle.json" 2>&1 | Out-String).Trim()
   Check ($LASTEXITCODE -eq 0) 'case-gep-bundle' 'medical RCT case GEP bundle validates'
+  if($LASTEXITCODE -ne 0 -and $out) { Write-Host $out -ForegroundColor DarkRed }
+
+  $out = (& uv run python steps\publish\scripts\gep_bundle.py validate "$caseCs\run\gep_bundle.json" 2>&1 | Out-String).Trim()
+  Check ($LASTEXITCODE -eq 0) 'case-cs-gep-bundle' 'CS case GEP bundle validates'
+  if($LASTEXITCODE -ne 0 -and $out) { Write-Host $out -ForegroundColor DarkRed }
+
+  $out = (& uv run python steps\publish\scripts\gep_bundle.py validate "$caseEdu\run\gep_bundle.json" 2>&1 | Out-String).Trim()
+  Check ($LASTEXITCODE -eq 0) 'case-edu-gep-bundle' 'education case GEP bundle validates'
   if($LASTEXITCODE -ne 0 -and $out) { Write-Host $out -ForegroundColor DarkRed }
 } else {
   Check $false 'uv' 'uv not on PATH; cannot validate Python helper'

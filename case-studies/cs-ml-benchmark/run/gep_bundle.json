@@ -1,0 +1,128 @@
+{
+  "protocol": "gep-a2a",
+  "bundle_id": "paperswarm-run_20260618T044118Z_cs",
+  "created_at": "2026-06-18T04:45:00Z",
+  "quality_gate": {
+    "outcome_score": 0.833,
+    "blast_radius_files": 1,
+    "blast_radius_lines": 180,
+    "gate_passed": true
+  },
+  "assets": [
+    {
+      "type": "Gene",
+      "id": "gene-paperswarm-review-strategy-20260618T044118Z",
+      "version": "1.0.0",
+      "meta": {
+        "title": "中文学术论文蜂群评审策略（可插拔角色池）",
+        "description": "按论文类型组队的可插拔评审角色池（基础 editor/method/domain/devil + 按需 statistician/reproducibility/ethicist）真并行评审",
+        "author": "paperswarm-node-ca065ab254a95e7b",
+        "created_at": "2026-06-18T04:45:00Z"
+      },
+      "category": "repair",
+      "tags": [
+        "academic-writing",
+        "review",
+        "chinese",
+        "计算机科学",
+        "时序预测"
+      ],
+      "trigger": {
+        "keywords": [
+          "论文评审",
+          "投稿前检查",
+          "结构完整性",
+          "研究方法"
+        ],
+        "file_extensions": [
+          ".md",
+          ".docx",
+          ".tex"
+        ],
+        "min_blast_radius": {
+          "files": 1,
+          "lines": 50
+        }
+      },
+      "validation": [
+        "检查输入文件是否为论文草稿（含标题、摘要、章节结构）",
+        "确认论文类型已识别（journal/thesis/essay）",
+        "验证 reviewer_set.roles 对应评审 Agent 的 prompt 是否包含学科专属评审维度",
+        "确认 reviewer_set.json 含基础四角色（editor/method/domain/devil）"
+      ],
+      "blast_radius": {
+        "files": [
+          "review_editor.md",
+          "review_method.md",
+          "review_domain.md",
+          "review_devil.md",
+          "review_reproducibility.md"
+        ],
+        "lines": 50,
+        "description": "生成 reviewer_set.roles 对应的独立评审报告"
+      },
+      "outcome": {
+        "score": 0.833,
+        "description": "评审报告平均质量分，基于文本引用完整度和建议可操作性"
+      }
+    },
+    {
+      "type": "Capsule",
+      "id": "capsule-run_20260618T044118Z_cs",
+      "gene_id": "gene-paperswarm-review-strategy-20260618T044118Z",
+      "version": "1.0.0",
+      "meta": {
+        "title": "TempoMix 时序预测蜂群评审案例",
+        "created_at": "2026-06-18T04:45:00Z"
+      },
+      "tags": [
+        "cs-ml-benchmark",
+        "计算机科学",
+        "时序预测"
+      ],
+      "content": {
+        "top_conflict": "基线跨论文拼接（method/devil/reproducibility 共识致命伤）—— 五角色一致判重写/拒稿",
+        "resolution": "采纳重写实验部分后重投；选择性报告采纳devil严厉定性（诚信红线）",
+        "outcome": {
+          "score": 0.833,
+          "status": "gate_passed"
+        },
+        "blast_radius": {
+          "files": [
+            "paper_draft.cs.md"
+          ],
+          "lines": 180
+        }
+      }
+    },
+    {
+      "type": "EvolutionEvent",
+      "id": "event-run_20260618T044118Z_cs",
+      "gene_id": "gene-paperswarm-review-strategy-20260618T044118Z",
+      "capsule_id": "capsule-run_20260618T044118Z_cs",
+      "version": "1.0.0",
+      "meta": {
+        "created_at": "2026-06-18T04:45:00Z"
+      },
+      "event_type": "review_completed",
+      "outcome": {
+        "score": 0.833
+      },
+      "details": {
+        "conflict_patterns": [
+          "CS ML论文判级共识强（一致重写/拒稿）",
+          "ML论文reproducibility是MVP角色"
+        ],
+        "agent_reliability": {
+          "editor": 4.0,
+          "method": 4.5,
+          "domain": 4.5,
+          "devil": 4.5,
+          "reproducibility": 5.0
+        },
+        "lesson": "CS ML论文必须组reproducibility（系统复现缺陷框架+与devil交叉验证）；statistician/ethicist可安全skip。与医学run互补证明组队规则双向正确"
+      }
+    }
+  ],
+  "bundle_hash": "sha256:40280aa57db197cc158d4e066184497dfb652e46357d16fb90b98076eb739c60"
+}

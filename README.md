@@ -40,9 +40,11 @@ Start here:
 - `integrations/evomap/workflow.md`
 - `integrations/evomap/examples/recall_medical_rct.sanitized.json`
 
-The main public integration case is:
+The main public integration cases are:
 
 - `case-studies/medical-rct-lx204/`
+- `case-studies/cs-ml-benchmark/`
+- `case-studies/education-quasi-experiment/`
 
 ## Repository Layout
 
@@ -116,6 +118,10 @@ The full public medical chain is under `case-studies/medical-rct-lx204/`. It
 includes the synthetic medical manuscript, six role reviews, conflict
 adjudication, a revision plan, an archive summary, a P1 audit sample, and the
 GEP bundle used to show the EvoMap integration path.
+
+Additional public cases are under `case-studies/`: the CS benchmark case shows
+why reproducibility review is selected for computational experiments, and the
+education quasi-experiment case shows the real Worker/Verifier revision loop.
 
 ## Credentials
 

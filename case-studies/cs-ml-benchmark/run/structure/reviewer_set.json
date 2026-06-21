@@ -1,0 +1,14 @@
+{
+  "paper_type": "cs-ml-benchmark",
+  "discipline": "计算机科学（机器学习/时序预测）",
+  "method": "定量实证（基准对比+消融）",
+  "roles": ["editor", "method", "domain", "devil", "reproducibility"],
+  "role_rationale": {
+    "reproducibility": "ML 基准论文含代码/模型/数据集对比，需核验：代码模型当前未公开、基线跨论文拼接非统一复现、多次运行方差未报、192/336 步选择性未报"
+  },
+  "skipped": ["statistician", "ethicist"],
+  "skip_rationale": {
+    "statistician": "ML 基准论文无 RCT 式统计前提/样本量功效需求，运行方差与显著性核验由 reproducibility 角色覆盖",
+    "ethicist": "时序预测算法研究，不涉人体/动物研究，无伦理审查需求"
+  }
+}

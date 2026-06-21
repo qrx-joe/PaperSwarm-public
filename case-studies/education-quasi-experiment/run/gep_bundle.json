@@ -1,0 +1,179 @@
+{
+  "protocol": "gep-a2a",
+  "bundle_id": "paperswarm-run_20260616T154502Z_4308",
+  "created_at": "2026-06-17T18:00:00+08:00",
+  "quality_gate": {
+    "outcome_score": 0.83,
+    "review_score": 0.82,
+    "conflict_resolution_accuracy": 0.85,
+    "blast_radius_files": 5,
+    "blast_radius_lines": 120,
+    "gate_passed": true
+  },
+  "assets": [
+    {
+      "type": "Gene",
+      "id": "gene-paperswarm-review-strategy-20260617",
+      "version": "1.0.0",
+      "meta": {
+        "title": "中文学术论文 4-Agent 蜂群评审策略",
+        "description": "4 个独立评审 Agent（主编/方法论/领域/魔鬼代言人）经 Claude Code delegate 真并行评审论文草稿，fan-in 冲突检测与人工裁决，生成 P0/P1/P2 修改计划",
+        "author": "paperswarm-node-dev",
+        "created_at": "2026-06-17T18:00:00+08:00"
+      },
+      "category": "repair",
+      "tags": [
+        "academic-writing",
+        "review",
+        "chinese",
+        "education",
+        "quantitative-quasi-experiment"
+      ],
+      "trigger": {
+        "keywords": [
+          "论文评审",
+          "投稿前检查",
+          "结构完整性",
+          "研究方法"
+        ],
+        "file_extensions": [
+          ".md",
+          ".docx",
+          ".tex"
+        ],
+        "min_blast_radius": {
+          "files": 1,
+          "lines": 50
+        }
+      },
+      "validation": [
+        "检查输入文件是否为论文草稿（含标题、摘要、章节结构）",
+        "确认论文类型已识别（journal/thesis/essay）",
+        "验证 4 个评审 Agent 的 prompt 是否包含学科专属评审维度"
+      ],
+      "blast_radius": {
+        "files": [
+          "review_editor.md",
+          "review_method.md",
+          "review_domain.md",
+          "review_devil.md"
+        ],
+        "lines": 50,
+        "description": "生成 4 份独立评审报告，每份含评分、具体意见、修改建议"
+      },
+      "outcome": {
+        "score": 0.82,
+        "description": "评审报告平均质量分，基于文本引用完整度和建议可操作性"
+      }
+    },
+    {
+      "type": "Capsule",
+      "id": "capsule-paperswarm-run_20260616T154502Z_4308",
+      "gene_id": "gene-paperswarm-review-strategy-20260617",
+      "version": "1.0.0",
+      "meta": {
+        "title": "教育学定量准实验论文评审案例 #run_20260616",
+        "description": "本次评审循环的具体案例：冲突模式、裁决结果、修改计划、对抗验收收敛",
+        "author": "paperswarm-node-dev",
+        "created_at": "2026-06-17T18:00:00+08:00"
+      },
+      "tags": [
+        "education",
+        "quantitative-quasi-experiment",
+        "journal-paper",
+        "判级分歧",
+        "前测缺失"
+      ],
+      "trigger": {
+        "keywords": [
+          "education",
+          "quantitative-quasi-experiment",
+          "journal-paper"
+        ],
+        "file_extensions": [
+          ".md"
+        ],
+        "min_blast_radius": {
+          "files": 1,
+          "lines": 20
+        }
+      },
+      "content": {
+        "summary": "本次评审发现 1 严重冲突（判级大修 vs 重写）+ 1 中度冲突（最致命问题：聚类效应 vs 前测缺失）+ 4 共识 + 1 devil 独到（混合方法诚信红线）。裁决：大修偏重写，前测缺失为归因地基最致命。生成 6 P0 + 4 P1 + 3 P2 修改计划，Worker/Verifier 对抗验收收敛。",
+        "blast_radius": {
+          "files": [
+            "review_archive.md",
+            "conflict_report.md",
+            "revision_plan.md",
+            "paper_revised.md",
+            "revise_report.md"
+          ],
+          "lines": 120,
+          "description": "冲突报告含段落引用，修改计划精确到章节，revise 产出改后论文 + 验收报告"
+        },
+        "outcome": {
+          "score": 0.83,
+          "success": true,
+          "streak": 1,
+          "description": "评审建议经 Worker 改 + Verifier 独立验收收敛（R1 打回 d 算错 → R2 双算收敛 d=1.24，13 条全通过）"
+        }
+      },
+      "diff": null,
+      "strategy": "4-Agent 并行评审 → 冲突检测 → 人工裁决 → 修改计划 → Worker/Verifier 对抗验收"
+    },
+    {
+      "type": "EvolutionEvent",
+      "id": "event-paperswarm-run_20260616T154502Z_4308",
+      "gene_id": "gene-paperswarm-review-strategy-20260617",
+      "capsule_id": "capsule-paperswarm-run_20260616T154502Z_4308",
+      "version": "1.0.0",
+      "meta": {
+        "title": "评审循环 #run_20260616 进化事件",
+        "author": "paperswarm-node-dev",
+        "created_at": "2026-06-17T18:00:00+08:00"
+      },
+      "event_type": "evaluation",
+      "outcome": {
+        "score": 0.83,
+        "success": true,
+        "streak": 1
+      },
+      "details": {
+        "conflict_patterns": [
+          {
+            "type": "判级分歧（大修 vs 重写）",
+            "frequency": "high",
+            "severity": "high",
+            "reliable_role": "devil"
+          },
+          {
+            "type": "最致命问题分歧（聚类效应 vs 前测缺失）",
+            "frequency": "medium",
+            "severity": "high",
+            "reliable_role": "devil"
+          }
+        ],
+        "agent_reliability": {
+          "editor": {
+            "score": 0.7,
+            "trend": "stable"
+          },
+          "method": {
+            "score": 0.85,
+            "trend": "up"
+          },
+          "domain": {
+            "score": 0.75,
+            "trend": "stable"
+          },
+          "devil_advocate": {
+            "score": 0.9,
+            "trend": "up"
+          }
+        },
+        "lesson": "魔鬼代言人在「归因地基/最弱环节」维度准确率持续最高（0.90），判级分歧与最致命问题分歧均采纳 devil。Revise 教训：Worker 复核算术可能再错（d=1.18 错 → 双算确认 1.24），Verifier 须独立复算；引文堆砌是 Worker 常见博弈，Verifier 核正文真引率而非条数。"
+      }
+    }
+  ],
+  "bundle_hash": "sha256:fd327ab223e7c75108336fbb18f20688c7778538f0303c48962d3712b56363f4"
+}
