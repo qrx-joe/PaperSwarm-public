@@ -1,5 +1,7 @@
 # PaperSwarm
 
+[中文说明](README.zh-CN.md)
+
 PaperSwarm is a multi-role academic review workflow for Chinese research
 drafts. It turns one paper into a traceable review swarm: structure parsing,
 role selection, independent expert reviews, conflict detection, revision
