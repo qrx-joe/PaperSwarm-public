@@ -103,6 +103,11 @@ $OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
 
 仓库不会提交真实凭据。EvoMap 相关脚本从用户本地环境或 home directory 读取凭据。公开 demo 应优先使用 validate/offline 路径，不能提交 token、OAuth 文件、私有报名材料或完整私有运行日志。
 
+## 贡献者
+
+- [qrx-joe](https://github.com/qrx-joe)
+- [Joe-rq](https://github.com/Joe-rq)
+
 ## 许可证
 
 MIT. See `LICENSE`.

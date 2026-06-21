@@ -1,6 +1,6 @@
 # PaperSwarm
 
-[中文说明](README.zh-CN.md)
+[Chinese README](README.zh-CN.md)
 
 PaperSwarm is a multi-role academic review workflow for Chinese research
 drafts. It turns one paper into a traceable review swarm: structure parsing,
@@ -97,6 +97,11 @@ workflow trace and avoids redistributing unnecessary manuscript text.
 No secrets are committed. EvoMap integration scripts expect credentials from
 the user's local environment or home directory. For public demos, use
 `validate`/offline paths first and never commit generated token files.
+
+## Contributors
+
+- [qrx-joe](https://github.com/qrx-joe)
+- [Joe-rq](https://github.com/Joe-rq)
 
 ## License
 
