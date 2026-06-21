@@ -1,0 +1,15 @@
+{
+  "_comment": "A2A publish envelope 模板（gep-a2a 协议）。executor 把 bundle.assets 填入 payload.assets。现场 API 未开放时本地保存，接口就绪后 POST /a2a/publish 或 evolver publish。",
+  "protocol": "gep-a2a",
+  "message_type": "publish",
+  "authorization": "Bearer {{node_secret}}",
+  "payload": {
+    "node_id": "{{node_id}}",
+    "assets": [
+      "{{ Gene 对象 }}",
+      "{{ Capsule 对象 }}",
+      "{{ EvolutionEvent 对象 }}"
+    ]
+  },
+  "_fallback_note": "现场 EvoMap API 未开放时本地保存；接口就绪后：evolver publish --bundle gep_bundle.json（先 --dry-run 校验，再正式发）"
+}

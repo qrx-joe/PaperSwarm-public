@@ -1,0 +1,34 @@
+{
+  "_comment": "Gene 评审策略模板（相对静态）。executor 填充 {{...}} 变量后作为 bundle 的 Gene 资产。结构源自 PRD §6.2。评审角色按论文类型可插拔组队，角色集见 structure 产出的 reviewer_set.json。",
+  "type": "Gene",
+  "id": "gene-paperswarm-review-strategy-{{timestamp}}",
+  "version": "1.0.0",
+  "meta": {
+    "title": "中文学术论文蜂群评审策略（可插拔角色池）",
+    "description": "按论文类型组队的可插拔评审角色池（基础 editor/method/domain/devil + 按需 statistician/reproducibility/ethicist）经 Claude Code delegate 真并行评审，fan-in 冲突检测与人工裁决，生成 P0/P1/P2 修改计划",
+    "author": "paperswarm-node-{{node_id}}",
+    "created_at": "{{ISO8601}}"
+  },
+  "category": "repair",
+  "tags": ["academic-writing", "review", "chinese", "{{discipline}}", "{{method}}"],
+  "trigger": {
+    "keywords": ["论文评审", "投稿前检查", "结构完整性", "研究方法"],
+    "file_extensions": [".md", ".docx", ".tex"],
+    "min_blast_radius": { "files": 1, "lines": 50 }
+  },
+  "validation": [
+    "检查输入文件是否为论文草稿（含标题、摘要、章节结构）",
+    "确认论文类型已识别（journal/thesis/essay）",
+    "验证 reviewer_set.roles 对应评审 Agent 的 prompt 是否包含学科专属评审维度",
+    "确认 reviewer_set.json 含基础四角色（editor/method/domain/devil）"
+  ],
+  "blast_radius": {
+    "files": ["review_<role>.md for role in reviewer_set.roles"],
+    "lines": 50,
+    "description": "生成 reviewer_set.roles 对应的独立评审报告，每份含评分、具体意见、修改建议"
+  },
+  "outcome": {
+    "score": "{{outcome_score}}",
+    "description": "评审报告平均质量分，基于文本引用完整度和建议可操作性"
+  }
+}
