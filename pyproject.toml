@@ -1,0 +1,10 @@
+[project]
+name = "paperswarm"
+version = "0.1.0"
+description = "A traceable multi-role academic paper review workflow."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[tool.uv]
+package = false

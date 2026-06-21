@@ -1,0 +1,32 @@
+# Python
+.venv/
+.uv-cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+build/
+
+# Local credentials and generated secrets
+.env
+.env.*
+!.env.example
+*.token
+oauth_token.json
+node_secret
+node_id
+
+# Local runtime files
+.serve.pid
+tmp_*.json
+*_tmp.py
+probe_*.py
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
