@@ -1,0 +1,27 @@
+{
+  "id": "quality-5dim",
+  "title": "中文学术论文 5 维度质量评审经验",
+  "description": "5 维度检查表 + 权重，用作评审角色池的 rubric 来源（结构化版；markdown 注入版见 rubric/quality_checklist.md）。本条目为 PaperSwarm 独立设计，非派生。",
+  "source": "paperswarm-original",
+  "applies_to": ["journal-paper", "thesis", "essay"],
+  "trigger_keywords": ["论文评审", "投稿前检查", "质量检查"],
+  "dimensions": [
+    { "dim": 1, "name": "原创与贡献", "weight": 0.25, "focus": "缺口陈述/创新性/重要性/理论对话", "reviewer": "editor,domain" },
+    { "dim": 2, "name": "方法严谨性", "weight": 0.25, "focus": "设计-问题匹配/推理自洽/方法论证", "reviewer": "method" },
+    { "dim": 3, "name": "证据与可复现性", "weight": 0.20, "focus": "数据可溯/效应量/统计前提/代码开放", "reviewer": "method,statistician,reproducibility,devil" },
+    { "dim": 4, "name": "论证与表达", "weight": 0.15, "focus": "主张-证据链/逻辑递进/结论支撑", "reviewer": "editor" },
+    { "dim": 5, "name": "规范与伦理", "weight": 0.15, "focus": "用语符号规范/IRB/知情同意/利益冲突", "reviewer": "editor,ethicist" }
+  ],
+  "scoring": "8.5-10 达投稿 / 7.0-8.4 小修 / 5.5-6.9 大修 / <5.5 重写",
+  "common_issues": [
+    "引言未点明研究缺口",
+    "文献综述按时间堆叠缺主题脉络",
+    "方法步骤不可复现关键参数缺失",
+    "结果仅描述无效应量",
+    "讨论复述结果未升华贡献",
+    "结论空泛与证据脱钩",
+    "参考文献格式不一引用错位",
+    "图表无解读正文未呼应",
+    "AI 生成痕迹明显"
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "schema_version": "0.1",
+  "run_id": "run_20260618T031533Z_med",
+  "generated_at": "2026-06-20T00:00:00Z",
+  "provenance": {
+    "executor": "Claude Code（executor 代拟 decision）",
+    "human_in_loop": false,
+    "events_origin": "manual_demo",
+    "note": "手工/半自动从 med run 的 markdown 抽取的诚实样例链（C2：CI/p 不自洽）。每个 event 带 source 标来源。decision_maker=ai_simulated 诚实标注（author_resolution.md:4 自标'executor 代拟'），revision 缺失进 gaps。这不是 agent 原生全量 events——是 schema 的可读样例 + 现有 run 的验真。"
+  },
+  "paper_meta": {
+    "paper_type": "medical-rct",
+    "discipline": "临床医学（内分泌与代谢）",
+    "method": "定量随机对照试验（RCT）",
+    "roles": ["editor", "method", "domain", "devil", "statistician", "ethicist"]
+  },
+  "events": [
+    {
+      "event_id": "fnd_devil_01",
+      "event_type": "reviewer_judgment",
+      "step": "review_devil",
+      "time": "2026-06-18T03:15:40Z",
+      "produced_by": "produced_by_agent",
+      "agent_kind": "devil",
+      "source": {
+        "from": "review_devil/review_devil.md",
+        "confidence": "direct"
+      },
+      "lineage": {},
+      "payload": {
+        "finding_id": "fnd_devil_01",
+        "claim": "主终点 CI[0.6–1.6%] 与 p=0.02 数学不自洽：按所给 SD/n 应 p<0.001，阳性结论数据可信度存疑",
+        "evidence": "CI[0.6–1.6%] 区间不含 0 但报告 p=0.02；代入 n=240 与所给 SD 反算 z≈9.2 → p<0.001，与 p=0.02 矛盾",
+        "target_section": {"section": "§3.2 主要终点", "line_range": "结果段"},
+        "dimension": 3,
+        "severity": "critical",
+        "confidence_level": "high",
+        "evidence_strength": "strong",
+        "reasoning": "devil 独立推演：代入所给 SD/n 重算 z 统计量≈9.2，对应 p 远小于 0.001，与报告 p=0.02 矛盾 → 数据可信度存疑。此发现与 statistician 独立推演一致（见 fnd_statistician_01），单角色易漏，双角色交叉坐实——这是蜂群价值的最硬证据。"
+      }
+    },
+    {
+      "event_id": "fnd_statistician_01",
+      "event_type": "reviewer_judgment",
+      "step": "review_statistician",
+      "time": "2026-06-18T03:15:42Z",
+      "produced_by": "produced_by_agent",
+      "agent_kind": "statistician",
+      "source": {
+        "from": "review_statistician/review_statistician.md",
+        "confidence": "direct"
+      },
+      "lineage": {},
+      "payload": {
+        "finding_id": "fnd_statistician_01",
+        "claim": "主终点统计证据链阻断：CI/p 不自洽（独立复核与 devil 一致）",
+        "evidence": "独立复核 CI[0.6–1.6%] 对应 z 值，结论 p 应<0.001，报告 p=0.02 存疑",
+        "target_section": {"section": "§3.2 主要终点"},
+        "dimension": 3,
+        "severity": "critical",
+        "confidence_level": "high",
+        "evidence_strength": "strong",
+        "reasoning": "statistician 从统计前提独立推演，与 devil 的对抗性推演在不相交的 context 下得出一致结论 → 交叉验证成立，非偶然。"
+      }
+    },
+    {
+      "event_id": "cfl_01",
+      "event_type": "conflict",
+      "step": "conflict",
+      "time": "2026-06-18T03:16:10Z",
+      "produced_by": "produced_by_agent",
+      "source": {
+        "from": "conflict/conflict_report.md",
+        "confidence": "inferred",
+        "inferred_method": "C2 在报告标为'共识问题（共识强度★★★★★，两人独立推演一致）'；tension_type 报告未显式分类，据其性质——可独立验证的数值关系——推断为 factual_disagreement",
+        "inferred_from": "conflict_report.md §二 C2 行 + §五'交叉验证硬伤：C2 被 devil 和 statistician 独立推演得出一致结论（p 应<0.001）'"
+      },
+      "lineage": {},
+      "payload": {
+        "conflict_id": "cfl_01",
+        "type": "consensus",
+        "tension_type": "factual_disagreement",
+        "finding_refs": ["fnd_devil_01", "fnd_statistician_01"],
+        "severity": "critical",
+        "confidence_level": "high"
+      }
+    },
+    {
+      "event_id": "dec_01",
+      "event_type": "decision",
+      "step": "conflict",
+      "time": "2026-06-18T03:16:30Z",
+      "produced_by": "produced_by_agent",
+      "decision_maker": "ai_simulated",
+      "source": {
+        "from": "conflict/author_resolution.md",
+        "confidence": "direct"
+      },
+      "lineage": {
+        "resolves": ["cfl_01"]
+      },
+      "payload": {
+        "decision_id": "dec_01",
+        "verdict": "adopt",
+        "rationale": "C2 属共识项（P0），纳入修改计划：重算主终点 CI/p 确保自洽。⚠ 本裁决由 executor 代拟（author_resolution.md:4 自标），非真人作者在环——待 gold run 升级为 decision_maker=human。",
+        "selected_position": "devil + statistician 共识"
+      }
+    },
+    {
+      "event_id": "fnd_baseline_01",
+      "event_type": "baseline_judgment",
+      "step": "structure",
+      "time": "2026-06-18T03:15:05Z",
+      "produced_by": "system_derived",
+      "agent_kind": "baseline",
+      "source": {
+        "from": "resources/knowledge/experience.json",
+        "confidence": "inferred",
+        "inferred_method": "从历史医学 RCT 评审经验库（experience.json med entry）的 high_frequency_issues 归纳，作为 baseline 注入对照",
+        "inferred_from": "experience.json run_20260618T031533Z_med entry 的 high_frequency_issues（LOCF 缺失填补、多重比较未校正）"
+      },
+      "lineage": {},
+      "payload": {
+        "finding_id": "fnd_baseline_01",
+        "claim": "【baseline 对照】历史医学 RCT 评审高频问题：缺失数据处理（LOCF）不当 + 多重比较未校正",
+        "evidence": "跨 run 经验库归纳（非本次评审产出，作 single-LLM-baseline 对照用）",
+        "dimension": 3,
+        "severity": "major",
+        "confidence_level": "medium",
+        "reasoning": "baseline 用途：replay UI 左栏并置对照——'单 LLM/baseline 给一坨建议 vs PaperSwarm 多角色 + 冲突 + 裁决链'。baseline 复用 reviewer_judgment schema（agent_kind=baseline 枚举）。"
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "event_id": "dec_01",
+      "field": "decision_maker",
+      "reason": "author_resolution.md:4 明标'裁决由 executor 代拟（标注），待真实作者确认'——本次 run 的 decision 全是 ai_simulated，'人类主持'命题在本 run 零证据",
+      "fix_step": "阶段3 conflict STEP 加同步逐条裁决 H 门（AskUserQuestion 逐条呈现 dissent）→ gold run 产出 decision_maker=human"
+    },
+    {
+      "event_id": "dec_01",
+      "field": "revision",
+      "reason": "revise 简化跳过（revise_report.md:3 '不跑 Worker/Verifier 改写论文'），无 paper_revised.md → Revision Diff 面板在本 run 无数据",
+      "fix_step": "阶段3 revise STEP 真跑 Worker/Verifier，产 revisions.json（before/after + enacts→decision_id）"
+    },
+    {
+      "event_id": "fnd_devil_01",
+      "field": "confidence_level",
+      "reason": "reviewer STEP 当前未要求结构化 confidence_level 枚举；本 demo 由 reasoning 强度（独立推演 z≈9.2）人工判为 high，非 agent 原生输出",
+      "fix_step": "阶段2 reviewer STEP 输出 confidence_level（rubric 分数映射派生，禁伪精密小数）"
+    },
+    {
+      "event_id": "cfl_01",
+      "field": "tension_type",
+      "reason": "conflict STEP 当前未显式分类 tension_type；本 demo inferred（已在 source.inferred_method 举证）",
+      "fix_step": "阶段3 conflict STEP 输出 tension_type 6 类枚举"
+    },
+    {
+      "event_id": "fnd_baseline_01",
+      "field": "derived_from",
+      "reason": "med run 未记录 recall 注入对具体 reviewer finding 的影响（recall 注入了但 lineage 隐式）",
+      "fix_step": "阶段2 reviewer STEP 记录受 recall 启发的 finding，连 derived_from→baseline"
+    }
+  ]
+}

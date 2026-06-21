@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paperswarm.local/schemas/events.schema.json",
+  "title": "PaperSwarm Audit Events",
+  "description": "PaperSwarm 可审计事件模型。把一次蜂群评审（reviewer_judgment → conflict → decision → revision）压成一条带 lineage 的因果事件流。设计纪律：(1) produced_by 是事件级生产者，source 是字段级来源，二者不重叠；(2) produced_by_agent 字段（claim/evidence/confidence 等）必须 agent 原生直出，绝不后补/偷编——demo 手工填时缺失字段进 gaps[]，并在 source.confidence 标 missing；(3) lineage 引用边是因果载体，time 是物理时序；(4) confidence 用枚举（low/medium/high）禁伪精密小数。这是论文 Figure 1 级学术对象，对标 provenance/audit 概念。",
+  "type": "object",
+  "required": ["schema_version", "run_id", "paper_meta", "events"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "本 schema 版本，便于 harvester/UI 兼容性判断"
+    },
+    "run_id": {
+      "type": "string",
+      "description": "对应 runs/<run_id>/，如 run_20260618T031533Z_med"
+    },
+    "generated_at": {
+      "type": "string",
+      "description": "events.json 生成时刻（harvester 产出时填，system_derived）"
+    },
+    "provenance": {
+      "type": "object",
+      "description": "run 级验真：executor 是谁、是否真人在环、本 events.json 由 harvester 还是手工产出",
+      "properties": {
+        "executor": { "type": "string", "description": "如 'Claude Code 2.1.177'" },
+        "human_in_loop": { "type": "boolean" },
+        "events_origin": { "enum": ["harvester", "manual_demo"], "description": "harvester=机器抽取；manual_demo=手工/半自动填（每个字段须带 source）" }
+      }
+    },
+    "paper_meta": {
+      "type": "object",
+      "required": ["paper_type", "discipline", "method", "roles"],
+      "properties": {
+        "paper_type": { "type": "string" },
+        "discipline": { "type": "string" },
+        "method": { "type": "string" },
+        "roles": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Event" }
+    },
+    "gaps": {
+      "type": "array",
+      "description": "缺失/降级字段登记。produced_by_agent 字段缺失时绝不偷补，登记于此，UI 明示。这是学术诚信守门。",
+      "items": { "$ref": "#/$defs/Gap" }
+    }
+  },
+
+  "$defs": {
+    "EventType": {
+      "enum": ["baseline_judgment", "reviewer_judgment", "conflict", "decision", "revision"]
+    },
+    "Producer": {
+      "enum": ["produced_by_agent", "system_derived", "human_decision", "human_annotation"],
+      "description": "produced_by_agent=reviewer/editor 原生直出(最可信)；system_derived=harvester 确定性算(lineage/time/hash)；human_decision=真人裁决；human_annotation=事后标注(仅解释,UI明示)"
+    },
+    "DecisionMaker": {
+      "enum": ["human", "ai_simulated", "editor_agent"],
+      "description": "decision 事件专用。UI 必须明示，不藏 ai_simulated"
+    },
+    "AgentKind": {
+      "enum": ["baseline", "editor", "method", "domain", "devil", "statistician", "reproducibility", "ethicist", "worker", "verifier", "lead"]
+    },
+    "TensionType": {
+      "enum": [
+        "factual_disagreement",
+        "methodological_gap",
+        "novelty_vs_evidence",
+        "scope_tradeoff",
+        "ethical_or_safety_risk",
+        "clarity_vs_substance"
+      ],
+      "description": "冲突要建模成张力类型，不是普通分歧。识别冲突性质 vs 检测分歧，是 demo 和论文的层级差"
+    },
+    "Severity": { "enum": ["critical", "major", "minor"] },
+    "ConfidenceLevel": { "enum": ["low", "medium", "high"] },
+    "EvidenceStrength": { "enum": ["weak", "moderate", "strong"] },
+    "VerifierState": { "enum": ["fixed", "partial", "unfixed", "regression"] },
+    "Verdict": { "enum": ["adopt", "reject", "partial", "request_reargument"] },
+    "SourceConfidence": { "enum": ["direct", "inferred", "missing"] },
+
+    "Lineage": {
+      "type": "object",
+      "description": "因果引用边。key=谓词，value=被引 event_id 数组。time 是物理时序不是因果，lineage 才是可追溯载体。",
+      "properties": {
+        "resolves_to": { "type": "array", "items": { "type": "string" }, "description": "conflict → 裁决它的 decision" },
+        "resolves": { "type": "array", "items": { "type": "string" }, "description": "decision → 它处理的 conflict" },
+        "enacts": { "type": "array", "items": { "type": "string" }, "description": "revision → 触发它的 decision" },
+        "derived_from": { "type": "array", "items": { "type": "string" }, "description": "judgment → 派生它的前序 judgment/baseline" }
+      },
+      "additionalProperties": { "type": "array", "items": { "type": "string" } }
+    },
+
+    "Source": {
+      "type": "object",
+      "description": "字段级来源标注。demo 手工填时每个 payload 字段必须带，防伪审计。direct/missing 都诚实，唯 inferred 须额外举证（inferred_method + inferred_from）。",
+      "required": ["from", "confidence"],
+      "properties": {
+        "kind": {
+          "enum": ["agent_generated", "system_derived", "human_annotation"],
+          "description": "可选，默认继承事件 produced_by。不放 ai_simulated（那是事件级 decision_maker）"
+        },
+        "from": {
+          "type": "string",
+          "description": "artifact 路径，如 review_method/review_method.md 或 conflict/conflict_report.md"
+        },
+        "confidence": { "$ref": "#/$defs/SourceConfidence" },
+        "inferred_method": {
+          "type": "string",
+          "description": "confidence=inferred 时必填：怎么推的（如 '从冲突报告两派判级映射为 scope_tradeoff'）"
+        },
+        "inferred_from": {
+          "type": "string",
+          "description": "confidence=inferred 时必填：从哪句原文/哪个证据推的（精确引用）"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "confidence": { "const": "inferred" } }, "required": ["confidence"] },
+          "then": { "required": ["inferred_method", "inferred_from"] }
+        }
+      ]
+    },
+
+    "Event": {
+      "type": "object",
+      "required": ["event_id", "event_type", "step", "time", "produced_by"],
+      "properties": {
+        "event_id": { "type": "string", "pattern": "^(evt|fnd|cfl|dec|rev)_", "description": "role 前缀防跨 step 漂移，如 fnd_method_01 / cfl_01 / dec_01 / rev_01" },
+        "event_type": { "$ref": "#/$defs/EventType" },
+        "step": { "type": "string", "description": "trace.json step 名，如 review_method / conflict / revise" },
+        "time": { "type": "string", "description": "物理时序（system_derived，从 mtime/拓扑序派生）。不是因果——因果看 lineage" },
+        "produced_by": { "$ref": "#/$defs/Producer" },
+        "decision_maker": { "$ref": "#/$defs/DecisionMaker" },
+        "agent_kind": { "$ref": "#/$defs/AgentKind" },
+        "lineage": { "$ref": "#/$defs/Lineage" },
+        "source": { "$ref": "#/$defs/Source" },
+        "payload": { "type": "object" }
+      },
+      "allOf": [
+        { "if": { "properties": { "event_type": { "const": "reviewer_judgment" } }, "required": ["event_type"] }, "then": { "properties": { "payload": { "$ref": "#/$defs/FindingPayload" } } } },
+        { "if": { "properties": { "event_type": { "const": "baseline_judgment" } }, "required": ["event_type"] }, "then": { "properties": { "payload": { "$ref": "#/$defs/FindingPayload" }, "agent_kind": { "const": "baseline" } } } },
+        { "if": { "properties": { "event_type": { "const": "conflict" } }, "required": ["event_type"] }, "then": { "properties": { "payload": { "$ref": "#/$defs/ConflictPayload" } } } },
+        { "if": { "properties": { "event_type": { "const": "decision" } }, "required": ["event_type"] }, "then": { "required": ["decision_maker"], "properties": { "payload": { "$ref": "#/$defs/DecisionPayload" } } } },
+        { "if": { "properties": { "event_type": { "const": "revision" } }, "required": ["event_type"] }, "then": { "properties": { "payload": { "$ref": "#/$defs/RevisionPayload" } } } }
+      ]
+    },
+
+    "FindingPayload": {
+      "type": "object",
+      "description": "reviewer_judgment / baseline_judgment 的 payload。核心字段 required，其余 optional（demo 允许 partial，缺失进 gaps）。",
+      "required": ["finding_id", "claim"],
+      "properties": {
+        "finding_id": { "type": "string" },
+        "claim": { "type": "string", "description": "一句话主张" },
+        "evidence": { "type": "string", "description": "草稿原文引用（med run 已达标——逐条带 §引用）" },
+        "target_section": {
+          "type": "object",
+          "properties": {
+            "section": { "type": "string" },
+            "line_range": { "type": "string" }
+          }
+        },
+        "dimension": { "type": "integer", "minimum": 1, "maximum": 5, "description": "对齐 rubric 5 维度" },
+        "severity": { "$ref": "#/$defs/Severity" },
+        "confidence_level": { "$ref": "#/$defs/ConfidenceLevel" },
+        "confidence_rationale": { "type": "string" },
+        "evidence_strength": { "$ref": "#/$defs/EvidenceStrength" },
+        "suggested_fix": { "type": "string" },
+        "fix_verify": { "type": "string", "description": "对接 revise Verifier 四态核验" },
+        "reasoning": { "type": "string", "description": "自由文本，保 devil/statistician 的对抗性长论证（如 z≈9.2 独立推演）" }
+      }
+    },
+
+    "ConflictPayload": {
+      "type": "object",
+      "required": ["conflict_id", "type"],
+      "properties": {
+        "conflict_id": { "type": "string" },
+        "type": { "enum": ["consensus", "dissent"] },
+        "tension_type": { "$ref": "#/$defs/TensionType" },
+        "finding_refs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "引用上游 finding_id（harvester 靠此连 lineage）"
+        },
+        "severity": { "$ref": "#/$defs/Severity" },
+        "confidence_level": { "$ref": "#/$defs/ConfidenceLevel" },
+        "sides": {
+          "type": "array",
+          "description": "每派的 finding_refs + reasoning 摘要，UI 渲染 View Counterargument 用",
+          "items": {
+            "type": "object",
+            "properties": {
+              "position": { "type": "string" },
+              "finding_refs": { "type": "array", "items": { "type": "string" } },
+              "summary": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "DecisionPayload": {
+      "type": "object",
+      "required": ["decision_id", "verdict"],
+      "properties": {
+        "decision_id": { "type": "string" },
+        "verdict": { "$ref": "#/$defs/Verdict" },
+        "rationale": { "type": "string", "description": "裁决理由。human_decision 时由作者给" },
+        "selected_position": { "type": "string" }
+      }
+    },
+
+    "RevisionPayload": {
+      "type": "object",
+      "required": ["revision_id"],
+      "properties": {
+        "revision_id": { "type": "string" },
+        "before": { "type": "string", "description": "章节段落原文" },
+        "after": { "type": "string", "description": "改后段落" },
+        "target_section": {
+          "type": "object",
+          "properties": { "section": { "type": "string" }, "line_range": { "type": "string" } }
+        },
+        "verifier_state": { "$ref": "#/$defs/VerifierState" },
+        "round": { "type": "integer", "description": "Worker/Verifier 对抗轮次" }
+      }
+    },
+
+    "Gap": {
+      "type": "object",
+      "description": "缺失/降级字段登记。produced_by_agent 字段缺失绝不偷补，登记于此。",
+      "required": ["event_id", "field", "reason"],
+      "properties": {
+        "event_id": { "type": "string", "description": "所属事件，或 'run' 表 run 级缺口" },
+        "field": { "type": "string" },
+        "reason": { "type": "string", "description": "如 'reviewer STEP 未要求 confidence_level，需阶段2改造' / 'revise 简化跳过无 revision 产物'" },
+        "fix_step": { "type": "string", "description": "补救路径，如 '改 review_method/STEP.md 输出 confidence_level'" }
+      }
+    }
+  }
+}

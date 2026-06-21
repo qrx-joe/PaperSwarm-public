@@ -1,0 +1,117 @@
+{
+  "id": "paperswarm",
+  "title": "PaperSwarm — 中文学术论文蜂群评审",
+  "description": "按论文类型组队的可插拔评审角色池（基础 editor/method/domain/devil + 按需 statistician/reproducibility/ethicist，角色集见 structure 产出的 reviewer_set.json）经 Claude Code delegate 并行评审论文草稿，fan-in 到冲突检测与修改计划，Worker/Verifier 对抗循环验收改到位，归档、沉淀经验到本地知识库供跨论文复用、封装为 EvoMap GEP 资产（Gene+Capsule+EvolutionEvent，C 方案 dry-run + fallback）（5 维度 rubric 注入）。根节点 structure 锚定「学科/方法/类型」这一判断——各路评审、冲突检测、修改计划与验收全部 from_steps 它；改这一个判断（如准实验↔真实验、教育学↔心理学）会让各份评审与下游全链立刻 stale、整条重跑：这是本 trace 的 node-level steering 故事。",
+  "version": "0.1.0",
+  "steps": {
+    "structure": {
+      "name": "论文结构解析",
+      "does": "解析论文草稿，提取章节结构与学科/方法/类型，并据此输出可插拔评审组队决策 reviewer_set.json（基础4角色 + 按类型叠加）",
+      "from_inputs": ["paper_draft"],
+      "from_steps": [],
+      "assets": ["paper_structure.md", "reviewer_set.json"],
+      "asset_title": "论文结构解析报告 + 评审组队决策"
+    },
+    "review_editor": {
+      "name": "主编评审",
+      "does": "期刊主编视角，判断研究是否值得发表、论证是否连贯可追、体例是否达同行评审门槛（delegate 独立 subagent）",
+      "from_steps": ["structure"],
+      "assets": ["review_editor.md"],
+      "asset_title": "主编评审报告"
+    },
+    "review_method": {
+      "name": "方法论评审",
+      "does": "研究设计审计视角，审查设计-问题匹配、证据采集规范性、内部效度隐患（delegate 独立 subagent）",
+      "from_steps": ["structure"],
+      "assets": ["review_method.md"],
+      "asset_title": "方法论评审报告"
+    },
+    "review_domain": {
+      "name": "领域专家评审",
+      "does": "学科内部人视角，审查研究在领域版图的定位、文献对话深度、概念与结论的学科准确性（delegate 独立 subagent）",
+      "from_steps": ["structure"],
+      "assets": ["review_domain.md"],
+      "asset_title": "领域专家评审报告"
+    },
+    "review_devil": {
+      "name": "魔鬼代言人评审",
+      "does": "对抗性审稿人视角，全维度施压重压证据链：揪出无证据论断、隐藏前提、他种解释与最薄弱处（delegate 独立 subagent，必须 Opus）",
+      "from_steps": ["structure"],
+      "assets": ["review_devil.md"],
+      "asset_title": "魔鬼代言人评审报告"
+    },
+    "review_statistician": {
+      "name": "统计审稿人评审",
+      "does": "统计审稿人视角，核验统计前提/效应量/样本量功效/模型选择/多重比较（按需 spawn：定量论文）",
+      "from_steps": ["structure"],
+      "assets": ["review_statistician.md"],
+      "asset_title": "统计审稿人评审报告"
+    },
+    "review_reproducibility": {
+      "name": "复现审稿人评审",
+      "does": "复现审稿人视角，核验代码数据开放/实验可复跑/基准公平性/结果稳定性（按需 spawn：含代码数据论文）",
+      "from_steps": ["structure"],
+      "assets": ["review_reproducibility.md"],
+      "asset_title": "复现审稿人评审报告"
+    },
+    "review_ethicist": {
+      "name": "伦理审稿人评审",
+      "does": "伦理审稿人视角，核验IRB/知情同意/数据保护/利益冲突/动物实验与双重用途（按需 spawn：涉人体动物研究）",
+      "from_steps": ["structure"],
+      "assets": ["review_ethicist.md"],
+      "asset_title": "伦理审稿人评审报告"
+    },
+    "conflict": {
+      "name": "冲突检测与裁决",
+      "does": "对比 reviewer_set.roles 的评审，检测评价相反/建议矛盾/优先级冲突，分级并给裁决建议（sentinel 跳过）",
+      "from_steps": ["review_editor", "review_method", "review_domain", "review_devil", "review_statistician", "review_reproducibility", "review_ethicist"],
+      "assets": ["conflict_report.md", "author_resolution.md"],
+      "asset_title": "冲突检测报告 + 作者裁决"
+    },
+    "advice": {
+      "name": "修改建议生成",
+      "does": "汇总评审+裁决，去重排序，生成 P0/P1/P2 修改计划",
+      "from_steps": ["conflict"],
+      "assets": ["revision_plan.md"],
+      "asset_title": "修改计划"
+    },
+    "revise": {
+      "name": "修改 Worker/Verifier 对抗循环",
+      "does": "Worker 按修改计划改论文，Verifier 独立四态核验改到位没，N=2 收敛或升级人工",
+      "from_steps": ["advice"],
+      "assets": ["paper_revised.md", "revise_report.md"],
+      "asset_title": "改后论文 + 验收报告"
+    },
+    "archive": {
+      "name": "评审归档与经验沉淀",
+      "does": "归档本次评审+修改验收完整结果，提取经验追加到本地经验库，供下次复用",
+      "from_steps": ["revise"],
+      "assets": ["review_archive.md", "experience_update.json"],
+      "asset_title": "评审归档 + 经验更新"
+    },
+    "publish": {
+      "name": "资产封装与发布",
+      "does": "封装本次评审+修改验收为 EvoMap 标准 GEP 资产（Gene+Capsule+EvolutionEvent），本地结构校验 + canonical hash + publish payload，真发留接口就绪一行命令（C 方案 dry-run + fallback）",
+      "from_steps": ["archive"],
+      "assets": ["gep_bundle.json", "gep_bundle_preview.md", "publish_payload.json"],
+      "asset_title": "GEP 资产包"
+    }
+  },
+  "deliverable": {
+    "description": "一次蜂群评审+修改验收的完整产物：reviewer_set.roles 各份独立评审 + 冲突报告 + 修改计划 + 改后论文与验收报告 + 归档沉淀 + EvoMap GEP 资产包，外加 structure 的学科/方法/类型判断（各份评审与下游全链均据此计算）。",
+    "assets": [
+      "archive/review_archive.md",
+      "revise/revise_report.md",
+      "revise/paper_revised.md",
+      "advice/revision_plan.md",
+      "conflict/conflict_report.md",
+      "conflict/author_resolution.md",
+      "structure/paper_structure.md",
+      "publish/gep_bundle.json"
+    ]
+  },
+  "environment": {
+    "python": [],
+    "r": []
+  }
+}
