@@ -75,7 +75,7 @@ production work rather than completed demo evidence.
 |-- integrations/               # EvoMap integration notes and sanitized examples
 |-- docs/evidence/              # Public evidence notes and audit boundaries
 |-- replay/                     # Static replay viewer
-|-- scripts/demo-smoke.ps1      # Offline public smoke check
+|-- scripts/                    # Offline smoke check and Flowtrace launcher
 |-- docs/DEMO.md                # Demo walkthrough
 |-- .env.example                # Credential variable names only
 `-- pyproject.toml              # Minimal uv project metadata
@@ -108,6 +108,21 @@ before viewing files:
 chcp 65001
 $OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
 ```
+
+## Flowtrace UI
+
+If the Flowtrace CLI is installed locally, start the trace DAG viewer with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\serve-flowtrace.ps1
+```
+
+Then open `http://127.0.0.1:3001`.
+
+Flowtrace's `--scope` points to the directory that contains trace project
+folders, not the trace project folder itself. This script uses the repository's
+parent directory as the scope so that `paperswarm-public/trace.json` is
+discovered correctly.
 
 ## Demo Run
 

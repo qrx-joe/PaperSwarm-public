@@ -21,6 +21,7 @@ node_id
 
 # Local runtime files
 .serve.pid
+.flowtrace.pid
 tmp_*.json
 *_tmp.py
 probe_*.py
