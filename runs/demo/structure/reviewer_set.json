@@ -1,0 +1,14 @@
+{
+  "paper_type": "medical-rct",
+  "discipline": "临床医学（内分泌与代谢）",
+  "method": "定量随机对照试验（RCT）",
+  "roles": ["editor", "method", "domain", "devil", "ethicist", "statistician"],
+  "role_rationale": {
+    "ethicist": "涉人体研究（240 例 T2DM 患者），需核验 IRB/伦理委员会审批、知情同意流程、数据保护、利益冲突披露",
+    "statistician": "RCT 含 ITT + LOCF 缺失填补、ANCOVA、8 个次要终点比较、子组分析，需核验缺失数据处理偏倚与多重比较校正"
+  },
+  "skipped": ["reproducibility"],
+  "skip_rationale": {
+    "reproducibility": "纯临床统计论文，无代码/数据集/模型权重需开放复现"
+  }
+}

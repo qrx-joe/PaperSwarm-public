@@ -1,0 +1,130 @@
+{
+  "protocol": "gep-a2a",
+  "bundle_id": "paperswarm-run_20260618T031533Z_med",
+  "created_at": "2026-06-18T03:20:00Z",
+  "quality_gate": {
+    "outcome_score": 0.833,
+    "blast_radius_files": 1,
+    "blast_radius_lines": 200,
+    "gate_passed": true
+  },
+  "assets": [
+    {
+      "type": "Gene",
+      "id": "gene-paperswarm-review-strategy-20260618T031533Z",
+      "version": "1.0.0",
+      "meta": {
+        "title": "中文学术论文蜂群评审策略（可插拔角色池）",
+        "description": "按论文类型组队的可插拔评审角色池（基础 editor/method/domain/devil + 按需 statistician/reproducibility/ethicist）真并行评审",
+        "author": "paperswarm-node-ca065ab254a95e7b",
+        "created_at": "2026-06-18T03:20:00Z"
+      },
+      "category": "repair",
+      "tags": [
+        "academic-writing",
+        "review",
+        "chinese",
+        "临床医学",
+        "定量RCT"
+      ],
+      "trigger": {
+        "keywords": [
+          "论文评审",
+          "投稿前检查",
+          "结构完整性",
+          "研究方法"
+        ],
+        "file_extensions": [
+          ".md",
+          ".docx",
+          ".tex"
+        ],
+        "min_blast_radius": {
+          "files": 1,
+          "lines": 50
+        }
+      },
+      "validation": [
+        "检查输入文件是否为论文草稿（含标题、摘要、章节结构）",
+        "确认论文类型已识别（journal/thesis/essay）",
+        "验证 reviewer_set.roles 对应评审 Agent 的 prompt 是否包含学科专属评审维度",
+        "确认 reviewer_set.json 含基础四角色（editor/method/domain/devil）"
+      ],
+      "blast_radius": {
+        "files": [
+          "review_editor.md",
+          "review_method.md",
+          "review_domain.md",
+          "review_devil.md",
+          "review_statistician.md",
+          "review_ethicist.md"
+        ],
+        "lines": 50,
+        "description": "生成 reviewer_set.roles 对应的独立评审报告"
+      },
+      "outcome": {
+        "score": 0.833,
+        "description": "评审报告平均质量分，基于文本引用完整度和建议可操作性"
+      }
+    },
+    {
+      "type": "Capsule",
+      "id": "capsule-run_20260618T031533Z_med",
+      "gene_id": "gene-paperswarm-review-strategy-20260618T031533Z",
+      "version": "1.0.0",
+      "meta": {
+        "title": "LX-204 RCT 蜂群评审案例",
+        "created_at": "2026-06-18T03:20:00Z"
+      },
+      "tags": [
+        "medical-rct",
+        "临床医学",
+        "定量RCT"
+      ],
+      "content": {
+        "top_conflict": "判级分歧：大修（editor/method）vs 重写（domain/devil/statistician/ethicist）—— 规范可补 vs 统计需重做",
+        "resolution": "采纳大修+统计重做折中；LOCF偏倚方向采纳statistician修正（方向不明需定量）",
+        "outcome": {
+          "score": 0.833,
+          "status": "gate_passed"
+        },
+        "blast_radius": {
+          "files": [
+            "paper_draft.medical.md"
+          ],
+          "lines": 200
+        }
+      }
+    },
+    {
+      "type": "EvolutionEvent",
+      "id": "event-run_20260618T031533Z_med",
+      "gene_id": "gene-paperswarm-review-strategy-20260618T031533Z",
+      "capsule_id": "capsule-run_20260618T031533Z_med",
+      "version": "1.0.0",
+      "meta": {
+        "created_at": "2026-06-18T03:20:00Z"
+      },
+      "event_type": "review_completed",
+      "outcome": {
+        "score": 0.833
+      },
+      "details": {
+        "conflict_patterns": [
+          "判级分歧大修vs重写在医学RCT高发",
+          "对抗角色断言常需专家角色定量修正"
+        ],
+        "agent_reliability": {
+          "editor": 4.0,
+          "method": 4.5,
+          "domain": 4.5,
+          "devil": 4.0,
+          "statistician": 5.0,
+          "ethicist": 4.5
+        },
+        "lesson": "医学RCT必须组ethicist+statistician：前者独占合规盲区，后者修正魔鬼代言人过强统计断言；reproducibility对纯临床统计论文可安全跳过"
+      }
+    }
+  ],
+  "bundle_hash": "sha256:6057be8ae52d99495b8acc2cd1aa4c1b99a867892984ce95157dd62d5154620b"
+}
