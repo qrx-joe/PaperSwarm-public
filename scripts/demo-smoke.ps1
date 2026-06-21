@@ -39,6 +39,8 @@ $files = @(
   'integrations\evomap\README.md',
   'integrations\evomap\workflow.md',
   'integrations\evomap\examples\recall_medical_rct.sanitized.json',
+  'docs\SETUP.md',
+  'docs\SETUP.zh-CN.md',
   'docs\evidence\README.md',
   'docs\evidence\non-consensus-evidence.md',
   'docs\evidence\schema-gap-report.md',

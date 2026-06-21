@@ -83,6 +83,11 @@ production work rather than completed demo evidence.
 
 ## Quick Check
 
+For a fresh machine, start with the setup guide:
+
+- `docs/SETUP.md`
+- `docs/SETUP.zh-CN.md`
+
 On Windows PowerShell:
 
 ```powershell
