@@ -1,0 +1,30 @@
+{
+  "mode": "public-demo-offline",
+  "status": "not_submitted",
+  "reason": "This sanitized public artifact keeps the EvoMap publish payload local and does not include credentials or a live submission receipt.",
+  "bundle_path": "runs/demo/publish/gep_bundle.json",
+  "bundle_id": "paperswarm-run_20260618T031533Z_med",
+  "bundle_hash": "sha256:6057be8ae52d99495b8acc2cd1aa4c1b99a867892984ce95157dd62d5154620b",
+  "safe_to_publish": true,
+  "offline_validation": [
+    "powershell -ExecutionPolicy Bypass -File scripts\\demo-smoke.ps1",
+    "uv run python steps\\publish\\scripts\\gep_bundle.py validate runs\\demo\\publish\\gep_bundle.json"
+  ],
+  "redaction_policy": {
+    "excluded": [
+      "private credentials",
+      "OAuth tokens",
+      "registration material",
+      "travel notes",
+      "planning logs",
+      "hackathon working notes"
+    ],
+    "included": [
+      "workflow definition",
+      "step prompts",
+      "schema and rubric resources",
+      "sanitized cached demo outputs",
+      "offline replay assets"
+    ]
+  }
+}

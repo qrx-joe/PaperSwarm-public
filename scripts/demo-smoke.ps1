@@ -16,10 +16,21 @@ $files = @(
   'trace.json',
   'resources\paper_draft.example.md',
   "$run\structure\reviewer_set.json",
+  "$run\structure\paper_structure.md",
+  "$run\review_editor\review_editor.md",
+  "$run\review_method\review_method.md",
+  "$run\review_domain\review_domain.md",
+  "$run\review_devil\review_devil.md",
+  "$run\review_ethicist\review_ethicist.md",
+  "$run\review_statistician\review_statistician.md",
   "$run\conflict\conflict_report.md",
   "$run\conflict\author_resolution.md",
   "$run\advice\revision_plan.md",
+  "$run\revise\paper_revised.md",
   "$run\revise\revise_report.md",
+  "$run\archive\review_archive.md",
+  "$run\publish\gep_bundle_preview.md",
+  "$run\publish\publish_payload.json",
   "$run\publish\gep_bundle.json"
 )
 
@@ -42,6 +53,7 @@ if(Get-Command node -ErrorAction SilentlyContinue) {
     'trace.json',
     "$run\structure\reviewer_set.json",
     "$run\publish\gep_bundle.json",
+    "$run\publish\publish_payload.json",
     'resources\schema\events.schema.json',
     'resources\schema\demo.events.json'
   )
@@ -52,14 +64,26 @@ if(Get-Command node -ErrorAction SilentlyContinue) {
       if($LASTEXITCODE -ne 0 -and $out) { Write-Host $out -ForegroundColor DarkRed }
     }
   }
+
+  $out = (& node steps\publish\scripts\validate_review.js $run 2>&1 | Out-String).Trim()
+  Check ($LASTEXITCODE -eq 0) 'review-validate' 'review reports match reviewer_set roles'
+  if($LASTEXITCODE -ne 0 -and $out) { Write-Host $out -ForegroundColor DarkRed }
 } else {
-  Check $false 'node' 'node not on PATH; cannot validate JSON'
+  Check $false 'node' 'node not on PATH; cannot validate JSON or review reports'
+}
+
+if(Get-Command uv -ErrorAction SilentlyContinue) {
+  $out = (& uv run python steps\publish\scripts\gep_bundle.py validate "$run\publish\gep_bundle.json" 2>&1 | Out-String).Trim()
+  Check ($LASTEXITCODE -eq 0) 'gep-bundle' 'GEP bundle validates'
+  if($LASTEXITCODE -ne 0 -and $out) { Write-Host $out -ForegroundColor DarkRed }
+} else {
+  Check $false 'uv' 'uv not on PATH; cannot validate Python helper'
 }
 
 $conflict = Join-Path $run 'conflict\conflict_report.md'
 if(Test-Path $conflict) {
   $txt = Get-Content $conflict -Raw -Encoding UTF8
-  Check ($txt -match 'CI|p|statistician|devil|魔鬼|统计') 'demo-hook' 'conflict report contains cross-review terms'
+  Check ($txt -match 'CI|p|statistician|devil') 'demo-hook' 'conflict report contains cross-review terms'
 }
 
 if($fail -eq 0) {
